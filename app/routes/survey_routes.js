@@ -78,7 +78,7 @@ router.post('/surveys', requireToken, (req, res) => {
 router.patch('/surveys/:id', requireToken, (req, res) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
-  delete req.body.survey.owner
+  delete req.body.survey.creator
 
   Survey.findById(req.params.id)
     .then(handle404)
@@ -110,11 +110,11 @@ router.patch('/surveys/:id', requireToken, (req, res) => {
 router.delete('/surveys/:id', requireToken, (req, res) => {
   Survey.findById(req.params.id)
     .then(handle404)
-    .then(example => {
+    .then(survey => {
       // throw an error if current user doesn't own `survey`
-      // requireOwnership(req, example)
+      requireOwnership(req, survey)
       // delete the example ONLY IF the above didn't throw
-      example.remove()
+      survey.remove()
     })
     // send back 204 and no content if the deletion succeeded
     .then(() => res.sendStatus(204))
