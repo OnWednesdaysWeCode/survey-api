@@ -5,7 +5,7 @@ const responseSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  response: String
+  answer: String
 }, {
   timestamps: true
 })
