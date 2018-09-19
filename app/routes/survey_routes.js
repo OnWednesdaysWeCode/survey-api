@@ -44,18 +44,18 @@ router.get('/surveys', requireToken, (req, res) => {
     .catch(err => handle(err, res))
 })
 
-// // SHOW
-// // GET /examples/5a7db6c74d55bc51bdf39793
-// router.get('/examples/:id', requireToken, (req, res) => {
-//   // req.params.id will be set based on the `:id` in the route
-//   Example.findById(req.params.id)
-//     .then(handle404)
-//     // if `findById` is succesful, respond with 200 and "example" JSON
-//     .then(example => res.status(200).json({ example: example.toObject() }))
-//     // if an error occurs, pass it to the handler
-//     .catch(err => handle(err, res))
-// })
-//
+// SHOW
+// GET /surveys/5a7db6c74d55bc51bdf39793
+router.get('/surveys/:id', requireToken, (req, res) => {
+  // req.params.id will be set based on the `:id` in the route
+  Survey.findById(req.params.id)
+    .then(handle404)
+    // if `findById` is succesful, respond with 200 and "survey" JSON
+    .then(survey => res.status(200).json({ survey: survey.toObject() }))
+    // if an error occurs, pass it to the handler
+    .catch(err => handle(err, res))
+})
+
 // CREATE
 // POST /surveys
 router.post('/surveys', requireToken, (req, res) => {
@@ -73,53 +73,53 @@ router.post('/surveys', requireToken, (req, res) => {
     .catch(err => handle(err, res))
 })
 //
-// // UPDATE
-// // PATCH /examples/5a7db6c74d55bc51bdf39793
-// router.patch('/examples/:id', requireToken, (req, res) => {
-//   // if the client attempts to change the `owner` property by including a new
-//   // owner, prevent that by deleting that key/value pair
-//   delete req.body.example.owner
-//
-//   Example.findById(req.params.id)
-//     .then(handle404)
-//     .then(example => {
-//       // pass the `req` object and the Mongoose record to `requireOwnership`
-//       // it will throw an error if the current user isn't the owner
-//       requireOwnership(req, example)
-//
-//       // the client will often send empty strings for parameters that it does
-//       // not want to update. We delete any key/value pair where the value is
-//       // an empty string before updating
-//       Object.keys(req.body.example).forEach(key => {
-//         if (req.body.example[key] === '') {
-//           delete req.body.example[key]
-//         }
-//       })
-//
-//       // pass the result of Mongoose's `.update` to the next `.then`
-//       return example.update(req.body.example)
-//     })
-//     // if that succeeded, return 204 and no JSON
-//     .then(() => res.sendStatus(204))
-//     // if an error occurs, pass it to the handler
-//     .catch(err => handle(err, res))
-// })
-//
-// // DESTROY
-// // DELETE /examples/5a7db6c74d55bc51bdf39793
-// router.delete('/examples/:id', requireToken, (req, res) => {
-//   Example.findById(req.params.id)
-//     .then(handle404)
-//     .then(example => {
-//       // throw an error if current user doesn't own `example`
-//       requireOwnership(req, example)
-//       // delete the example ONLY IF the above didn't throw
-//       example.remove()
-//     })
-//     // send back 204 and no content if the deletion succeeded
-//     .then(() => res.sendStatus(204))
-//     // if an error occurs, pass it to the handler
-//     .catch(err => handle(err, res))
-// })
+// UPDATE
+// PATCH /surveys/5a7db6c74d55bc51bdf39793
+router.patch('/surveys/:id', requireToken, (req, res) => {
+  // if the client attempts to change the `owner` property by including a new
+  // owner, prevent that by deleting that key/value pair
+  delete req.body.survey.creator
+
+  Survey.findById(req.params.id)
+    .then(handle404)
+    .then(survey => {
+      // pass the `req` object and the Mongoose record to `requireOwnership`
+      // it will throw an error if the current user isn't the owner
+      requireOwnership(req, survey)
+
+      // the client will often send empty strings for parameters that it does
+      // not want to update. We delete any key/value pair where the value is
+      // an empty string before updating
+      Object.keys(req.body.survey).forEach(key => {
+        if (req.body.survey[key] === '') {
+          delete req.body.survey[key]
+        }
+      })
+
+      // pass the result of Mongoose's `.update` to the next `.then`
+      return survey.update(req.body.survey)
+    })
+    // if that succeeded, return 204 and no JSON
+    .then(() => res.sendStatus(204))
+    // if an error occurs, pass it to the handler
+    .catch(err => handle(err, res))
+})
+
+// DESTROY
+// DELETE /surveys/5a7db6c74d55bc51bdf39793
+router.delete('/surveys/:id', requireToken, (req, res) => {
+  Survey.findById(req.params.id)
+    .then(handle404)
+    .then(survey => {
+      // throw an error if current user doesn't own `survey`
+      requireOwnership(req, survey)
+      // delete the example ONLY IF the above didn't throw
+      survey.remove()
+    })
+    // send back 204 and no content if the deletion succeeded
+    .then(() => res.sendStatus(204))
+    // if an error occurs, pass it to the handler
+    .catch(err => handle(err, res))
+})
 
 module.exports = router
