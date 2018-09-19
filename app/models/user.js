@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
+const Schema = mongoose.Schema
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   email: {
     type: String,
     required: true,
@@ -10,7 +11,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  token: String
+  token: String,
+  surveys: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Survey'
+  }]
 }, {
   timestamps: true,
   toObject: {
