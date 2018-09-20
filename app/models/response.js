@@ -1,11 +1,19 @@
 const mongoose = require('mongoose')
 
 const responseSchema = new mongoose.Schema({
-  user: {
+// references the responder, not the creat
+  responder: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
-  answer: String
+  answer: {
+    type: String,
+    required: true
+  },
+  survey: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Survey'
+  }
 }, {
   timestamps: true
 })
