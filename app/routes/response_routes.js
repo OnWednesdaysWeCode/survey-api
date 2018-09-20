@@ -3,6 +3,10 @@ const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
 const passport = require('passport')
 
+// const mongoose = require('mongoose')
+
+const Survey = require('../models/survey')
+
 // pull in Mongoose model for responses
 const Response = require('../models/response')
 
@@ -48,15 +52,20 @@ router.get('/responses', requireToken, (req, res) => {
 router.post('/responses', requireToken, (req, res) => {
   // set responder of response to be current user
   req.body.response.responder = req.user.id
-  // body.response needs the answer as a string, and the surveyId
-  Response.create(req.body.response)
-    // respond to succesful `create` with status 201 and JSON of new "response"
-    .then(response => {
-      res.status(201).json({ response: response.toObject() })
+  // combine two promises -- Survey.findById and Response.create --
+  // into one super Promise that returns an array of two promises
+  Promise.all([Survey.findById(req.body.response.survey), Response.create(req.body.response)])
+    .then(data => {
+      // assign first promise to survey variable, second promise to response variable
+      let [survey, response] = data
+      // push response id to responses field in survey
+      survey.responses.push(response.id)
+      // save the survey with the new response just pushed
+      survey.save()
+      // return posted response object as JSON
+      res.status(201).json({response: response.toObject()})
     })
-    // if an error occurs, pass it off to our error handler
-    // the error handler needs the error message and the `res` object so that it
-    // can send an error message back to the client
+    // error handler for both promises
     .catch(err => handle(err, res))
 })
 
