@@ -11,6 +11,7 @@ const bcryptSaltRounds = 10
 
 const handle = require('../../lib/error_handler')
 const BadParamsError = require('../../lib/custom_errors').BadParamsError
+const handle404 = require('../../lib/custom_errors').handle404
 
 const User = require('../models/user')
 
@@ -132,6 +133,13 @@ router.delete('/sign-out', requireToken, (req, res) => {
   // save the token and respond with 204
   req.user.save()
     .then(() => res.sendStatus(204))
+    .catch(err => handle(err, res))
+})
+
+router.get('/users/:id', (req, res) => {
+  User.findById(req.params.id).populate('surveys')
+    .then(handle404)
+    .then(user => res.status(200).json({ user: user.toObject() }))
     .catch(err => handle(err, res))
 })
 

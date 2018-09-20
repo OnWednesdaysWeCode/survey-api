@@ -48,7 +48,7 @@ router.get('/surveys', requireToken, (req, res) => {
 // GET /surveys/5a7db6c74d55bc51bdf39793
 router.get('/surveys/:id', requireToken, (req, res) => {
   // req.params.id will be set based on the `:id` in the route
-  Survey.findById(req.params.id)
+  Survey.findById(req.params.id).populate('responses').exec()
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "survey" JSON
     .then(survey => res.status(200).json({ survey: survey.toObject() }))

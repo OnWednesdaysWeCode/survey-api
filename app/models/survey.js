@@ -22,7 +22,8 @@ const surveySchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Response' }]
 }, {
-  timestamps: true
+  timestamps: true,
+  usePushEach: true
 })
 
 module.exports = mongoose.model('Survey', surveySchema)
