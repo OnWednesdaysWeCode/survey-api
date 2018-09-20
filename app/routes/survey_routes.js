@@ -6,6 +6,8 @@ const passport = require('passport')
 // pull in Mongoose model for surveys
 const Survey = require('../models/survey')
 
+const User = require('../models/user')
+
 // we'll use this to intercept any errors that get thrown and send them
 // back to the client with the appropriate status code
 const handle = require('../../lib/error_handler')
@@ -62,11 +64,17 @@ router.post('/surveys', requireToken, (req, res) => {
   // set owner of new survey to be current user
   req.body.survey.creator = req.user.id
 
-  Survey.create(req.body.survey)
-    // respond to succesful `create` with status 201 and JSON of new "survey"
-    .then(survey => {
-      res.status(201).json({ survey: survey.toObject() })
+  Promise.all([User.findById(req.body.survey.creator), Survey.create(req.body.survey)])
+    .then(data => {
+      let [user, survey] = data
+      user.surveys.push(survey.id)
+      user.save()
+      res.status(201).json({survey: survey.toObject()})
     })
+    // respond to succesful `create` with status 201 and JSON of new "survey"
+    // .then(survey => {
+    //   res.status(201).json({survey: survey.toObject()})
+    // })
     // if an error occurs, pass it off to our error handler
     // the error handler needs the error message and the `res` object so that it
     // can send an error message back to the client

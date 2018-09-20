@@ -137,7 +137,7 @@ router.delete('/sign-out', requireToken, (req, res) => {
 })
 
 router.get('/users/:id', (req, res) => {
-  User.findById(req.params.id).populate('surveys')
+  User.findById(req.params.id).populate('surveys').exec()
     .then(handle404)
     .then(user => res.status(200).json({ user: user.toObject() }))
     .catch(err => handle(err, res))

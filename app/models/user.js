@@ -18,6 +18,7 @@ const userSchema = new Schema({
   }]
 }, {
   timestamps: true,
+  usePushEach: true,
   toObject: {
     // remove `hashedPassword` field when we call `.toObject`
     transform: (_doc, user) => {

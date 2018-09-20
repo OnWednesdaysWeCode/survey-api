@@ -51,31 +51,21 @@ router.get('/responses', requireToken, (req, res) => {
 // POST /responses
 router.post('/responses', requireToken, (req, res) => {
   // set responder of response to be current user
-  // const response = req.body.response
-  // response.responder = req.user.id
-  // const id = new mongoose.Types.ObjectId(req.body.response.survey)
-  // console.log('req.body.response.survey is ', typeof req.body.response.survey)
-  // response.survey = id
-  // console.log('response is ', response)
-  //
-  // // body.response needs the answer as a string, and the surveyId
-  // Response.create(response)
-  //   // respond to succesful `create` with status 201 and JSON of new "response"
-  //   .then(response => {
-  //     res.status(201).json({ response: response.toObject() })
-  //   })
-  //   // if an error occurs, pass it off to our error handler
-  //   // the error handler needs the error message and the `res` object so that it
-  //   // can send an error message back to the client
-  //   .catch(err => handle(err, res))
   req.body.response.responder = req.user.id
+  // combine two promises -- Survey.findById and Response.create --
+  // into one super Promise that returns an array of two promises
   Promise.all([Survey.findById(req.body.response.survey), Response.create(req.body.response)])
     .then(data => {
+      // assign first promise to survey variable, second promise to response variable
       let [survey, response] = data
+      // push response id to responses field in survey
       survey.responses.push(response.id)
+      // save the survey with the new response just pushed
       survey.save()
+      // return posted response object as JSON
       res.status(201).json({response: response.toObject()})
     })
+    // error handler for both promises
     .catch(err => handle(err, res))
 })
 
