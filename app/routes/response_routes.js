@@ -29,31 +29,19 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 // INDEX
-// GET /responses
-// router.get('/responses', requireToken, (req, res) => {
-//   Response.find()
-//     .then(responses => {
-//       // we want to convert each one to a POJO, so we use `.map` to
-//       // apply `.toObject` to each one
-//       return responses.map(response => response.toObject())
-//     })
-//     // respond with status 200 and JSON of the responses
-//     .then(responses => res.status(200).json({ responses: responses }))
-//     // if an error occurs, pass it to the handler
-//     .catch(err => handle(err, res))
-// })
-//
-// // SHOW
-// // GET /responses
-// router.get('/responses/:id', requireToken, (req, res) => {
-//   // req.params.id will be set based on the `:id` in the route
-//   Response.findById(req.params.id)
-//     .then(handle404)
-//     // if `findById` is succesful, respond with 200 and "response" JSON
-//     .then(response => res.status(200).json({ response: response.toObject() }))
-//     // if an error occurs, pass it to the handler
-//     .catch(err => handle(err, res))
-// })
+// GET all/responses
+router.get('/responses', requireToken, (req, res) => {
+  Response.find()
+    .then(responses => {
+      // we want to convert each one to a POJO, so we use `.map` to
+      // apply `.toObject` to each one
+      return responses.map(response => response.toObject())
+    })
+    // respond with status 200 and JSON of the responses
+    .then(responses => res.status(200).json({ responses: responses }))
+    // if an error occurs, pass it to the handler
+    .catch(err => handle(err, res))
+})
 
 // CREATE
 // POST /responses
