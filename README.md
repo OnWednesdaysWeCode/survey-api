@@ -16,7 +16,7 @@ Use the following demo credentials
 Back-end (Catherine)
 Front-end
 
-### Planning Process (Abby)
+### Planning Process
 Trello
 Scrum
 Discuss proper git workflow -- especially with working remotely from each other
@@ -38,7 +38,7 @@ We started with a basic wireframe and evolved our wireframe from there.
 We decided to do a embedded relationship between documents. Users have many surveys, surveys have many responses. User can create and edit their own surveys, but any user can take surveys.
 [ERD image](https://imgur.com/a/m0n2aVe)
 
-### Future Goals (Abby)
+### Future Goals
 Custom urls to share surveys
 Functionality to only be able to take a survey once
 Display surveys one at a time and have a take random survey button
